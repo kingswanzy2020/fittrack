@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Progress{% endblock %}
+{% block content %}
+<h1>Progress</h1>
+<div class="card">
+    <div class="stat-number">{{ total }}</div>
+    <div class="stat-label">Total Workouts Logged</div>
+</div>
+<h2 style="margin-top:1.5rem;">Workout History</h2>
+<div class="card">
+    {% if workouts %}
+    {% for w in workouts|reverse %}
+    <div class="workout-item">
+        <span><strong>{{ w.type }}</strong> - {{ w.duration }} min</span>
+        <span>{{ w.date }} {{ w.time }}</span>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p style="color:#666;">No workout history yet. Start logging workouts to see your progress!</p>
+    {% endif %}
+</div>
+{% endblock %}

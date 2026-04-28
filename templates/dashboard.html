@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="stats">
+    <div class="card">
+        <div class="stat-number">{{ today_count }}</div>
+        <div class="stat-label">Workouts Today</div>
+    </div>
+    <div class="card">
+        <div class="stat-number">{{ total_count }}</div>
+        <div class="stat-label">Total Workouts</div>
+    </div>
+    <div class="card">
+        <div class="stat-number">{{ streak }}</div>
+        <div class="stat-label">Day Streak</div>
+    </div>
+</div>
+{% endblock %}

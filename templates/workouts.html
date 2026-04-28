@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Workouts{% endblock %}
+{% block content %}
+<h1>Log a Workout</h1>
+<div class="card">
+    <form method="POST" action="/workouts">
+        <div>
+            <label for="type">Type</label>
+            <select name="type" id="type">
+                {% for wtype in workout_types %}
+                <option value="{{ wtype }}">{{ wtype }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="duration">Duration (min)</label>
+            <input type="number" name="duration" id="duration" value="30" min="1" max="300">
+        </div>
+        <button type="submit">Log Workout</button>
+    </form>
+</div>
+<h2 style="margin-top:1.5rem;">Recent Workouts</h2>
+<div class="card">
+    {% if recent %}
+    {% for w in recent|reverse %}
+    <div class="workout-item">
+        <span><strong>{{ w.type }}</strong> - {{ w.duration }} min</span>
+        <span>{{ w.date }} {{ w.time }}</span>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p style="color:#666;">No workouts yet. Log your first one above!</p>
+    {% endif %}
+</div>
+{% endblock %}

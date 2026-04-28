@@ -1,0 +1,60 @@
+# Prometheus server configuration
+prometheus:
+  prometheusSpec:
+    # Keep metrics data for 7 days
+    retention: 7d
+    # Lightweight resources for local development
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    # Discover ServiceMonitors in ALL namespaces, not just this one
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # Discover PrometheusRules in ALL namespaces too
+    ruleSelectorNilUsesHelmValues: false
+
+# Grafana dashboard UI
+grafana:
+  # Custom admin password (default would be prom-operator)
+  adminPassword: "fittrack-admin"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# Alert routing and notification manager
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# Collects hardware and OS metrics from each node
+nodeExporter:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# Tracks the state of Kubernetes objects (pods, deployments)
+kubeStateMetrics:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi      

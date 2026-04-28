@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fittrack
+  namespace: fittrack
+  labels:
+    app: fittrack
+    release: prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: fittrack
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - fittrack
