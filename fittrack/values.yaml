@@ -1,0 +1,28 @@
+# Number of pod replicas to run
+replicaCount: 2
+
+# Container image settings
+image:
+  repository: ahmed3015/fittrack
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Kubernetes Service settings
+service:
+  type: ClusterIP
+  port: 80
+
+# Pod resource requests and limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+# Prometheus ServiceMonitor settings
+serviceMonitor:
+  enabled: true
+  releaseLabel: prometheus-stack
+  interval: 15s

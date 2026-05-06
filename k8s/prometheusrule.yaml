@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fittrack-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus-stack
+spec:
+  groups:
+    - name: fittrack.rules
+      rules:
+        - alert: FitTrackHighErrorRate
+          expr: |
+            (
+              sum(rate(flask_http_request_total{status=~"5..", job="fittrack"}[5m]))
+              /
+              sum(rate(flask_http_request_total{job="fittrack"}[5m]))
+            ) > 0.05
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "FitTrack high error rate"
+            description: "More than 5% of requests are returning 5xx errors for the last 2
+              minutes."
