@@ -41,15 +41,30 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Update the Kubernetes deployment with the new image tag
-                sh """
-                    kubectl set image deployment/fittrack \
-                        fittrack=${DOCKER_IMAGE}:${IMAGE_TAG} \
-                        -n fittrack
-                    kubectl rollout status deployment/fittrack \
-                        -n fittrack \
-                        --timeout=120s
-                """
+                // Secret file credential: Jenkins copies the kubeconfig to a temp path in KUBECONFIG
+                withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
+                    sh """
+                        set -e
+                        if ! command -v kubectl >/dev/null 2>&1; then
+                            ARCH=\$(uname -m)
+                            case "\$ARCH" in
+                                x86_64) KUBE_ARCH=amd64 ;;
+                                aarch64|arm64) KUBE_ARCH=arm64 ;;
+                                *) echo "Unsupported architecture: \$ARCH"; exit 1 ;;
+                            esac
+                            KUBECTL_VER=\$(curl -fsL https://dl.k8s.io/release/stable.txt)
+                            curl -fsLO "https://dl.k8s.io/release/\${KUBECTL_VER}/bin/linux/\${KUBE_ARCH}/kubectl"
+                            chmod +x kubectl
+                            export PATH="\${WORKSPACE}:\${PATH}"
+                        fi
+                        kubectl set image deployment/fittrack \
+                            fittrack=${DOCKER_IMAGE}:${IMAGE_TAG} \
+                            -n fittrack
+                        kubectl rollout status deployment/fittrack \
+                            -n fittrack \
+                            --timeout=120s
+                    """
+                }
             }
         }
     }
